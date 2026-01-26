@@ -10,6 +10,7 @@ public class Controladora {
     
     ControladoraPersistencia ctrl = new ControladoraPersistencia(); 
     
+    //Clase Alumno
     public void crearAlumno(Alumno a){
         ctrl.crearAlumno(a);
     }
@@ -29,5 +30,27 @@ public class Controladora {
     
     public ArrayList<Alumno> traerListaAlumnos (){
         return ctrl.traerListaAlumnos();
+    }
+    
+    //Clase carrera
+    public void crearCarrera(Carrera a){
+        ctrl.crearCarrera(a);
+    }
+    
+    public void eliminarCarrera(int id){
+        ctrl.eliminarCarrera(id);
+    }
+    
+    
+    public void editarCarrera(Carrera a){
+        ctrl.editarCarrera(a);
+    }
+    
+    public Carrera traerCarrera(int id){
+        return ctrl.traerCarrera(id);     
+    }
+    
+    public ArrayList<Carrera> traerListaCarreras(){
+        return ctrl.traerListaCarreras();
     }
 }

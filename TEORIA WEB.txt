@@ -264,9 +264,38 @@ Método FIND(): BUSCA Y trae un registro en particular.
 Método FIND Entity: trae todos los registros de la BD en un ArrayList.
 
  
+Relaciones 1 a 1 
+
+Cuando las relaciones aparecen se complejiza. Debemos pensar en el modelo de clases (como se ralacionan las clases entre si).
+
+Ej.
+Alumno <-> Carrera 
+
+Creamos la Clase Carrera y la mapeamos
+La agregamos a persistence.xml
+*Para crear el obj nos preguntamos de que lado tiene mas sentido que se cree el dicho objeto. En este caso voy a crear un variable miembro de tipo Carrera en clase Alumno.
+a esto debemos agregar la annotation: @OneToOne.
+
+**Debemos tener en cuenta que al actualizar los atributos de Alumno, debemos actualizar sus constructores, getters y setters, en caso de ser necesario. 
+Lo que si debemos actualizar es el jpsController de Alumno, ya que no tiene lo necesario para el nuevo atributo de carrera. entonces los creamos de nuevo a los dos JPAControllers.
+Luego copy and paste el constructor en cada uno de los controllers.
+
+public AlumnoJpaController() {
+        emf = Persistence.createEntityManagerFactory("pruebaJpaPU"); //nombre del perisitence unit 
+    }
 
 
+Para Asociar la Carrera con el Alumno
+Crear mismos métodos (añadir, editar, eliminar) en clase Controladora, y agregar e implementar lo necesario (var miembro y metodos) en clase ControladoraPersistencia.
 
+Luego en el main hacemos:
+1 Creación y guardado en BD la Carrera.
+2 Creación y guardado en BD de Alumno asociado con carrera.
+ 
+Fijarse que en la base de datos no se crea la nueva columna para el id de carrera en la tabla alumno. después de eso anda todo bien .
+
+ 
+  
 
 
 

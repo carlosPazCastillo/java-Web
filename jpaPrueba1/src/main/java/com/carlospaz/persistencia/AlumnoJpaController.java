@@ -1,40 +1,48 @@
 package com.carlospaz.persistencia;
 
 import com.carlospaz.jpaprueba1.logica.Alumno;
-import com.carlospaz.persistencia.exceptions.NonexistentEntityException;
 import java.io.Serializable;
+import javax.persistence.Query;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import com.carlospaz.jpaprueba1.logica.Carrera;
+import com.carlospaz.persistencia.exceptions.NonexistentEntityException;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
-import javax.persistence.EntityNotFoundException;
 import javax.persistence.Persistence;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 public class AlumnoJpaController implements Serializable {
-
-    private EntityManagerFactory emf = null;
 
     public AlumnoJpaController(EntityManagerFactory emf) {
         this.emf = emf;
     }
     
+    public AlumnoJpaController() {
+        emf = Persistence.createEntityManagerFactory("pruebaJpaPU");
+    }
+     
+    private EntityManagerFactory emf = null;
 
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-    
-    public AlumnoJpaController() {
-        emf = Persistence.createEntityManagerFactory("pruebaJpaPU");
-    }
 
-    // --- CREATE ---
     public void create(Alumno alumno) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
+            // Obtenemos la carrera asociada al alumno
+            Carrera carrera = alumno.getCarrera();
+            if (carrera != null) {
+                // Si la carrera existe, nos aseguramos de adjuntar la instancia
+                // gestionada por el Entity Manager antes de persistir el alumno.
+                // Esto es crucial si la carrera ya existe en la base de datos.
+                carrera = em.getReference(carrera.getClass(), carrera.getId());
+                alumno.setCarrera(carrera);
+            }
             em.persist(alumno);
             em.getTransaction().commit();
         } finally {
@@ -44,27 +52,23 @@ public class AlumnoJpaController implements Serializable {
         }
     }
 
-    // --- EDIT ---
     public void edit(Alumno alumno) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             
-            // Verificamos si existe antes de editar
-            int id = alumno.getId();
-            if (findAlumno(id) == null) {
-                throw new NonexistentEntityException("El alumno con id " + id + " no existe.");
-            }
-            
+            // Al editar, el 'merge' suele encargarse de actualizar la relación OneToOne
+            // siempre y cuando el objeto Carrera que viene dentro del Alumno tenga su ID correcto.
             alumno = em.merge(alumno);
+            
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 int id = alumno.getId();
                 if (findAlumno(id) == null) {
-                    throw new NonexistentEntityException("El alumno con id " + id + " no existe.");
+                    throw new NonexistentEntityException("The alumno with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -75,7 +79,6 @@ public class AlumnoJpaController implements Serializable {
         }
     }
 
-    // --- DESTROY ---
     public void destroy(int id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -84,10 +87,13 @@ public class AlumnoJpaController implements Serializable {
             Alumno alumno;
             try {
                 alumno = em.getReference(Alumno.class, id);
-                alumno.getId(); // Pequeño truco para forzar la carga del objeto
+                alumno.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("El alumno con id " + id + " no existe.", enfe);
+                throw new NonexistentEntityException("The alumno with id " + id + " no longer exists.", enfe);
             }
+            // Como la relación es unidireccional (Alumno conoce a Carrera, pero Carrera no conoce a Alumno),
+            // y no hay cascada de eliminación definida en la entidad,
+            // eliminar el alumno NO eliminará la carrera asociada automáticamente.
             em.remove(alumno);
             em.getTransaction().commit();
         } finally {
@@ -97,7 +103,6 @@ public class AlumnoJpaController implements Serializable {
         }
     }
 
-    // --- READ (Buscar todos) ---
     public List<Alumno> findAlumnoEntities() {
         return findAlumnoEntities(true, -1, -1);
     }
@@ -109,8 +114,12 @@ public class AlumnoJpaController implements Serializable {
     private List<Alumno> findAlumnoEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
+            // Es recomendable usar un "fetch join" para traer la carrera junto con el alumno
+            // en una sola consulta y evitar problemas de rendimiento (lazy loading).
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Alumno.class));
+            Root<Alumno> rt = cq.from(Alumno.class);
+            rt.fetch("carrera", javax.persistence.criteria.JoinType.LEFT); // Hacemos fetch de la relación
+            cq.select(rt);
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
@@ -122,7 +131,6 @@ public class AlumnoJpaController implements Serializable {
         }
     }
 
-    // --- READ (Buscar uno por ID) ---
     public Alumno findAlumno(int id) {
         EntityManager em = getEntityManager();
         try {
@@ -132,7 +140,6 @@ public class AlumnoJpaController implements Serializable {
         }
     }
 
-    // --- COUNT (Contar total) ---
     public int getAlumnoCount() {
         EntityManager em = getEntityManager();
         try {
@@ -145,4 +152,5 @@ public class AlumnoJpaController implements Serializable {
             em.close();
         }
     }
+    
 }
