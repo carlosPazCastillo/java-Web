@@ -1,0 +1,274 @@
+ARQ CLIENTE SERVIDOR
+COMO TRABAJA LA WEB?
+CLIENTE: computadora o navegador web que hace una petición (request)
+SERVIDOR: computadora que responde a las peticiones del cliente.Se encarga de procesar los pedidos de distintos clientes.Recibe y administra pedidos par determinar con que va a responder.
+
+El cliente se comunica con el servidor mediante el protocolo HTTP (protocolo de transferencia de hipertexto).
+Cuando el servidor responde, el cliente comprende las respuestas provenientes del servidor e interpreta y muestra por pantalla al usuario.
+
+HTTP vs HTTPS
+HTTPS tiene certificación SLL, lo que lo hace mas seguro que HTTP. Tiene una conexión encriptada, por ende mas segura.
+
+URL
+Uniform Resource Locator
+
+dirección especifica que se le asigna a cada uno de los recursos disponibles en la red para poder identificarlos. Cada recurso (pagina, imagen o documento) tiene su propia URL
+
+HTTP:// -> protocolo
+WWW. -> subdominio
+GOOGLE -> nombre de dominio
+.COM -> extension
+.AR -> geolocalización 
+/hola -> ruta
+
+QUE ES EL PROTOCOLO HTTP?
+es un conjunto de reglas que debemos seguir para poder obtener un determinado recurso o servicio.
+
+permite que los REQUEST Y RESPONSE  tengan un formato determinado a seguir y respetar para que se comuniquen sin inconvenientes.
+
+FORMA DE LA REQUEST 
+tiene una serie de partes donde cada una de ellas cumple con una funcionalidad distinta respecto al "mensaje" que el cliente le manda al servidor.
+Este se lo suele llamar paquetes.
+
+ESTRUCTURA:
+METODO -> establece la forma de comunicación de HTTP. Nos dice si es un GET, POST, PUT, DELETE. Marca la accion que queremos hacer sobre el servidor.
+
+URL -> especificamos la url con la que nos queremos comunicar dentro del servidor. Este tiene distintos servicios y endpoints con distinta url, por eso debemos establecerlas.
+
+HEADER -> van especificaciones importantes que se complete la conexión al servidor. Pueden ir un archivo json, o msj en json  (información que queremos pasar de cliente a servidor, por ej. para guardarla en una base de datos)
+
+BODY -> campo opcional. sirve para incluir texto, objetos o datos, que complementen los campos anteriores.
+
+FORMA DE RESPONSE 
+estas tienen también su formato que les permiten transportar la información para atender las request. También trabajados en forma de paquetes.
+
+FORMA DE LA RESPONSE
+
+STATUS CODES: marca las solicitudes atendidas o no
+->	códigos de rango 100
+->	códigos de rango 200
+->	códigos de rango 300
+->	códigos de rango 400
+->	códigos de rango 500
+
+HEADER -> misma función que la request, si devuelve info o datos viajan por aquí.
+
+BODY -> misma función que la request, lleva info extra en caso de ser necesario.
+
+METODOS HTTP 
+usados al hacer las REQUESTS
+
+GET -> solicita la representación de un recurso especifico, estas peticiones solo deben recuperar datos del servidor.
+
+POST -> envia una entidad a un recurso en especifico, causa un cambio en el estado del servidor
+
+PUT -> reemplaza todas las representaciones actuales del recurso o destino con la carga de la petición. Para hacer una modificación.
+
+DELETE -> dar de baja un recurso en especifico.
+
+PATCH -> modifica parcialmente un recurso. por ej, solo cambiar un campo de un alumno.
+
+
+Literlamente un ABM y lectura de datos.
+
+Como BACK-END vamos a RECIBIR estas solicitudes por parte del cliente, y dependiendo de que accion se pida vamos a responder.
+
+Como FRONTEND vamos a encargarnos de que el cliente MANDE la solicitud de acuerdo al método. 
+
+
+JSP
+Java Server Pages
+QUE ES?
+tecnología que nos permite crear pagias web dinámicas basadas en HTML y XML.
+Requiere un servidor web que sea compatible con contenedores servlet. ej. Tomcat o Glassfish
+
+Ventaja: portabilidad de Java, comprensión de los fdp web
+Desventaja: tecnología antigua
+
+Cada JSP contendrá mayormente HTML y CSS como frontend, sin embargo, puede utilizar etiquetas especiales para especificar porciones de código Java donde sea necesario.
+
+ETIQUETAS JSP 
+
+<%-- --%> : PARA COMENTAR 
+
+<%@ %> : PARA ATRIBUTOS DE CONFIG DE JSP.
+
+<% %> :INCLUIR CODIGO JAVA EN GENERAL, NO VISTO POR USUARIO. USO DE VAR LOCALES.
+
+<%= %> :MUESTRA EN PANTALLA DE USUARIO EL RESULTADO DEL CODIGO JAVA.
+
+<%! %> : DECLARACION DE VARIABLES Y METODOS DE INSTANCIAS QUE SE COMPARTEN A VARIOS JSP ASOCIADOS A UN MISMO SERVLET
+
+SERVLET
+QUE ES??
+Clase java que es intermediaria entre JSP y un servidor web.
+
+Se encarga de recibir REQUEST desde cliente, las trata y analiza si necesita realizar una solicitud en particular o brindar una determinada RESPONSE.
+Para esto utiliza los métodos HTTP (GET, POST, PUT, DELETE, PATCH), de acuerdo a esto acciona.
+
+Estos tienen distinto métodos que se utilizan según lo solicitado por el CLIENTE.
+Los mas usados son: 
+
+doGet(): recibe las solicitudes que vienen con GET
+
+doPost(): recibe las solicitudes que vienen con POST
+
+**Por cada clase Java que tenemos en nuestro modelo de datos, vamos a tener un servlet.
+
+Podemos implementar los Servlets de dos maneras:
+1_ teniendo un jsp aparte del servlet (que se comuniquen las dos entidades distintas)
+2_ servlet funcione como como jsp con su cod HTML
+
+
+METODO getParameter(): obtiene un valor de un parametro enviado por el cliente via metodos GET o POST
+Usado del lado del servlet.
+
+Ej de uso:
+Enviamos datos desde formulario de JSP que esta en una caja de texto llamada txtNombre, lo obtenemos asi:
+
+String dato=request.request.getParameter("txtNombe");
+
+**En el HTML, especificamente en etiqueta form tenemos que especificarle a donde queremos mandar el formulario, en este caso al servlet, y con que método HTTP. 
+
+<form action="svUsuario" method="POST">
+
+METODO GET
+FORMULARIO DE SOLICITUD DE DATOS 
+
+Usar en método doGet de svUsuario:
+HttpSession que es una clase especial para tomar la sesión de usuario que tenemos en el momento de la peticion GET.
+
+<código método doGet()>
+HttpSession sesión = request.getSession();
+sesión.setAttribute("usuario", usuarios);
+
+**traemos la sesión de la persona que mando la request y le seteamos la lista de usuarios disponibles.
+
+<código método doGet()>
+response.sendRedirect("mostrarUsuarios.jsp");
+
+**damos respuesta para que al hacer click en botón, redireccione a nuevo jsp llamado como en el parámetro.
+
+con las etiquetas java <% código %>, podemos poner código java, por ej un for(), y si queremos podemos cerrarlo en otra etiqueta java. Porque no podemos poner HTML dentro de estas.
+
+<% for(...) { %>
+
+código HTML
+
+<% }%> ** cerramos la llave del for
+
+en el paquete persistencia vamos a poner todas las config de las base de datos que vamos a utilizar.
+
+ANtes de continuar con esto necesito ver los JPA
+
+JPA
+Java Persitence API
+Mis palabras: sirve para que se haga un mapeo de nuestra app en java y se creen las entidades en una base de datos y al reves tambien, lo que esta en nuestra base de datos venga a nuestra app java.
+
+Definiciones tecnicas
+QUE ES JPA?
+Es un ORM (Object Relational Mapping) que permite lograr la persistencia de datos entre una app y una base de datos.
+Busca traducir el MODELO DE CLASES JAVA a un MODELADO RELACIONAL DE UNA DB, posibilitandonos elegir que clases u objetos vamos a dar persistencia.
+
+** mapea las clases y los traduce  una base de datos.
+Podemos tener una lógica en la app java y que la base de datos se adapte a esta o una bd ya creada que se adapte a nuestro modelo de clases. 
+Nos ahorra hacer las consultas sql manualmente.
+
+
+COMO FUNCIONA JPA?
+Se vale de una serie de mapeos que se realizan sobre cada elemento de una clase, y estos se representan con annotations(@).
+
+JPA cueta con proveedores de JPA, entre ellos, Eclipselink, Hibernate, Topliink, etc.
+
+
+APP JAVA -> JPA + PROOVEDOR DE JPA -> BD
+
+PARA CREAR CONEXION CON BD
+Ir al apartado "Services" en NetBeans
+
+
+Agregar el driver para conectar con MySQL de manera manual.
+**JDBC URL: después del signo de pregunta (?) agregar: "serverTimezone=UTC". Para no tener problemas de horarios.
+
+paquete persistencia: ir a "NEW" -> "Others" -> Carpeta "Persistence" -> Persistence Unit: para crear una unidad de persistencia.
+
+*La librería de persistencia será EclipseLink 
+*elegimos la conexión a la base de datos
+* estrategia de generación de tablas: Create.
+Lo que significa que Jpa se va a encargar de crear las tablas y demás cada vez que hagamos una solicitud.
+
+Annotations (ORM)
+
+@Entity : creación de entidad colocado al inicio de definición de clase.
+
+@Id : Primary key de entidad
+	@GeneratedValue(strategy = GenerationType.SEQUENCE) -> Id generado automáticamente y secuencial.
+**este se agrega una linea por encima del campo que vamos a utilizar como tal.
+
+
+@Basic : hace referencia a atributos comunes.
+
+@Temporal : usado en fechas 
+	@Temporal(TemporalType.TIMESTAMP): para tener en cuenta la hora
+	@Temporal(TemporalType.DATE): si solo tenemos en cuenta la fecha 
+
+@OneToMany: indica relacion de 1 a N 
+
+@OneToOne: indica relacion de 1 a 1
+
+@ManyToMany: indica relacion de N a N
+
+
+Después de mapear la clase que usemos con estas Annotations, debemos reflejarlo en la unidad de persistencia. Esto mediante interfaz grafica.
+
+JPA CONTROLLERS
+Los encargados de leer el mapeo que hacemos en nuestras clases y reflejarlos en las bases de datos. 
+
+*en paquete persistencia creamos un "JPA Controller Classes from Entity Classes"
+Esto selecciona automáticamente las clases que tengamos mapeadas con @Entity
+
+Agregamos las clases mediante interfaz y crea automáticamente el controlador. Debemos elegir el paquete persistencia. 
+
+
+Debemos crear un constructor que cree
+una Entity Manager Factory(administrador de entidades) a partir de la unidad de persistencia que tengamos.
+
+Este constructor lo debemos instanciar en algún lado, para eso creamos un controladora de persistencia, donde a futuro podemos tener muchos mas jpa controllers.
+ 
+en paquete persistencia -> New -> Java Class -> esta va a controlar las instancias de cada JPA controller.
+
+
+Después de esto crear una instancia en main() de controladora de persistencia, y si todo esta bien se debe crear una tabla "Alumno" en nuestra DB.
+la tabla secuence genera un registro por cada uno de los Alumnos que nosotros agreguemos.
+
+NOTA: TODOS los problemas los resolvi con Gemini. Eran problemas de dependencias que no se descargaban por incompatibilidad de JDK y NetBeans.
+
+
+CRUD 
+CREATE
+Hacemos el alta de un registro en BD. Crearemos un objeto en java y se agregara a la BD.
+
+Creamos en paquete persistencia un clase llamada Controladora. a esta debemos conectarla con la controladora de la capa Persistencia, creando una instancia de esta.
+
+Esta controladora va arecibir de algun lado al alumno ya creado y llama a Persistencia para darlo de alta.
+Desde ControladoraPersistencia debemos usar la instancia de AlumnoController (y asi para cada uno de los Controllers que tengamos con distintas clases) y llamar a métodos como Create()
+
+Resumiendo con mis palabras: clase AlumnoController tiene los métodos para hacer el CRUD... ControlPersistencia tiene los métodos que llamaran a cada uno de estos métodos de AlumnoController, con sus respectivos nombres como craer, borrar, etc... La clase Controladora recibirá desde la Interface Grafica por ej, el alumno ya creado con sus datos ya cargados. 
+*esta cadena es para cumplir con la arquitectura de capas.
+
+Mismo procedimiento para DELETE, UPDATE, READ.
+Método EDIT(): update
+
+Método FIND(): BUSCA Y trae un registro en particular.
+
+Método FIND Entity: trae todos los registros de la BD en un ArrayList.
+
+ 
+
+
+
+
+
+
+
+
