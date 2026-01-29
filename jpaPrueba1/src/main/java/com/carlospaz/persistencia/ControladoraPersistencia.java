@@ -3,6 +3,7 @@ package com.carlospaz.persistencia;
 
 import com.carlospaz.jpaprueba1.logica.Alumno;
 import com.carlospaz.jpaprueba1.logica.Carrera;
+import com.carlospaz.jpaprueba1.logica.Materia;
 import com.carlospaz.persistencia.exceptions.NonexistentEntityException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.logging.Logger;
 public class ControladoraPersistencia {
     AlumnoJpaController alu = new AlumnoJpaController();
     CarreraJpaController carr = new CarreraJpaController();
+    MateriaJpaController mat = new MateriaJpaController();
 
     public void crearAlumno(Alumno a) {
          alu.create(a);
@@ -76,9 +78,35 @@ public class ControladoraPersistencia {
         return listaCarreras;
     }
 
-    
+    public void crearMateria(Materia a) {
+       mat.create(a);
+    }
 
-    
+    public void eliminarMateria(int id) {
+        try {
+            mat.destroy(id);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ControladoraPersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void editarMateria(Materia a) {
+        try {
+            mat.edit(a);
+        } catch (Exception ex) {
+            Logger.getLogger(ControladoraPersistencia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public Materia traerMateria(int id) {
+        return mat.findMateria(id);
+    }
+
+    public ArrayList<Materia> traerListaMateria() {
+       List<Materia> listaM = mat.findMateriaEntities();
+        ArrayList<Materia> listaMateria = new ArrayList<Materia>(listaM); 
+        return listaMateria;
+    }
 
     
 }

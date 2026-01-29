@@ -264,7 +264,7 @@ Método FIND(): BUSCA Y trae un registro en particular.
 Método FIND Entity: trae todos los registros de la BD en un ArrayList.
 
  
-Relaciones 1 a 1 
+RELACIONES 1 A 1 
 
 Cuando las relaciones aparecen se complejiza. Debemos pensar en el modelo de clases (como se ralacionan las clases entre si).
 
@@ -294,7 +294,36 @@ Luego en el main hacemos:
  
 Fijarse que en la base de datos no se crea la nueva columna para el id de carrera en la tabla alumno. después de eso anda todo bien .
 
- 
+
+RELACIONES 1 A N
+EJEMPLO DE CARRERA Y MATERIA
+1 CARRERA PUEDE TENER MUCHAS MATERIAS...
+
+A NIVEL BASE DE DATOS, la FOREIGN KEY siempre va del lado de la N 
+A NIVEL LOGICO O MODELADO DE CLASES, tiene sentido que la CARRERA tenga una lista de MATERIAS que la comprenden.
+Representaremos en el código de esta manera a NIVEL LOGICO. *Generalmente esto se utiliza asi siempre en 1 a N.
+
+arriba de el atributo de listaMaterias lo mapeamos con la annotation: @OneToMany.
+
+Haciendo de esta manera el resultado es UNIDIRECCIONAL. O sea que Carrera se relaciona con Materia, pero no Materia con Carrera.
+Esto tiene consecuencias en la Base de Datos.
+
+
+hay que hacer los pasos que hicimos anteriormente. Agregar las clases entidad al persistence.xml, agregar el contructor que apunte a persistence.xml con el nombre a cada JpaControllerEntity, crear los controladores, agregar los métodos necesarios a la clase controladora y controladoraPersistencia
+
+Al ejecutar el programa en la base de datos nos va a crear la tabla intermedia carrera_materia. Se debe a que es una relación Unidireccional
+Lo solucionamos yendo a Clase Materia y creando una variable miembro de tipo Carrera con la annotation: @ManyToOne
+y del lado de Carrera debemos indicarle con quien se va a relacionar: @OneToMany(mappedBy="nombreVarMiembro" de tipo Carrera de la clase Materia)
+
+
+
+
+
+
+
+
+
+
   
 
 

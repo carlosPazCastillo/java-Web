@@ -53,4 +53,35 @@ public class Controladora {
     public ArrayList<Carrera> traerListaCarreras(){
         return ctrl.traerListaCarreras();
     }
+    
+    //Clase Materia
+    
+    public void crearMateria(Materia a){
+        ctrl.crearMateria(a);
+    }
+    
+    public void eliminarMateria(int id){
+        ctrl.eliminarMateria(id);
+    }
+    
+    
+    public void editarMateria(Materia a){
+        ctrl.editarMateria(a);
+    }
+    
+    public Materia traerMateria(int id){
+        return ctrl.traerMateria(id);     
+    }
+    
+    public ArrayList<Materia> traerListaMateria (){
+        return ctrl.traerListaMateria();
+    }
+    
+    
+    
+    
+    
+    
+    
+    
 }

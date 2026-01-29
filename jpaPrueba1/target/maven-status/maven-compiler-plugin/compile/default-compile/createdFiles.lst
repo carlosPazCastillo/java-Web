@@ -3,8 +3,11 @@ com\carlospaz\persistencia\exceptions\PreexistingEntityException.class
 com\carlospaz\jpaprueba1\JpaPrueba1.class
 com\carlospaz\jpaprueba1\logica\Controladora.class
 com\carlospaz\jpaprueba1\logica\Carrera.class
+com\carlospaz\jpaprueba1\logica\Materia_.class
+com\carlospaz\persistencia\MateriaJpaController.class
 com\carlospaz\persistencia\CarreraJpaController.class
 com\carlospaz\jpaprueba1\logica\Carrera_.class
+com\carlospaz\jpaprueba1\logica\Materia.class
 com\carlospaz\persistencia\AlumnoJpaController.class
 com\carlospaz\jpaprueba1\logica\Alumno.class
 com\carlospaz\jpaprueba1\logica\Alumno_.class
